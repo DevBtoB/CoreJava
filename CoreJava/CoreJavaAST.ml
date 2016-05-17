@@ -49,16 +49,3 @@ and exp_type =
     | ObjectType of string
     | FloatType
     | StringType
-
-and variable =
-    | Field of class_name
-        * exp_type
-        * string
-
-and class_name =
-    string
-
-and method_name =
-    string
-
-

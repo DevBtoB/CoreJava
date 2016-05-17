@@ -280,7 +280,11 @@ let p4 = Program [
 	Class ("Main", "", [],
 		[Method (IntType, "main", [],
 			[Var (StringType, "a"); Var (StringType, "b"); Var (StringType, "c"); Var (StringType, "e")],
-			[Assignment ("a", (NewId "Cat")); Assignment ("b", MethodCall(Id "a", "meow", [])); Assignment ("a", (NewId "RubberCat")); Assignment ("c", MethodCall(Id "a", "meow", [])); Assignment ("e", Operation(Id "b", Plus, Operation(String " ", Plus, Id "c")))],
+			[Assignment ("a", (NewId "Cat")); 
+        Assignment ("b", MethodCall(Id "a", "meow", [])); 
+        Assignment ("a", (NewId "RubberCat")); 
+        Assignment ("c", MethodCall(Id "a", "meow", [])); 
+        Assignment ("e", Operation(Id "b", Plus, Operation(String " ", Plus, Id "c")))],
 			Id "e");]);
 	Class ("AbstractCat", "", [], [Method (StringType, "meow", [], [], [], String "biip")]);
 	Class ("Cat", "AbstractCat", [], [Method (StringType, "meow", [], [], [], String "meow")]);
