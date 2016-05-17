@@ -2,19 +2,19 @@ open List
 open CoreJavaAST
 open CoreJavaUtils
 
-let rec asgn (id:id) (v:stackvalue) (env:environment) : environment =
+let rec asgn (id:string) (v:stackvalue) (env:environment) : environment =
   match env with
     | [] -> raise (TypeError ("Assignment to unbound variable " ^ id))
     | (id1,v1) :: t -> if id = id1 then (id,v) :: t
                         else (id1,v1) :: asgn id v t
 
-let rec binds (id:id) (env:environment) : bool =
+let rec binds (id:string) (env:environment) : bool =
   match env with
     | [] -> false
     | (id1, _)::t -> id=id1 || binds id t
 
 (* gets the value of the variable from the environment*)
-let rec fetch (id:id) (env:environment) : stackvalue =
+let rec fetch (id:string) (env:environment) : stackvalue =
   match env with
     | [] -> raise (TypeError ("Unbound variable: "^id))
     | (id1, v)::t -> if id=id1 then v else fetch id t
@@ -22,21 +22,21 @@ let rec fetch (id:id) (env:environment) : stackvalue =
 let rec mklist (i:int) (v:stackvalue) : stackvalue list =
        if i=0 then [] else v :: mklist (i-1) v
 
-let rec zip (lis1:id list) (lis2:stackvalue list) : environment =
+let rec zip (lis1:string list) (lis2:stackvalue list) : environment =
   match (lis1, lis2) with
     | ([], []) -> [] 
     | (h1::t1, h2::t2) -> (h1,h2) :: zip t1 t2
     | _ -> raise (TypeError ("Mismatched formal and actual param lists"))
 
-let zipscalar (lis:id list) (v:stackvalue) : environment =
+let zipscalar (lis:string list) (v:stackvalue) : environment =
   zip lis (mklist (length lis) v)
 
-let rec varnames (varlis:var_decl list) : id list =
+let rec varnames (varlis:var_decl list) : string list =
   match varlis with
     | [] -> [] 
     | (Var(_, s))::t -> s :: varnames t
 
-let getMethodInClass (id:id) (Class(_, _, _, methlis)) : method_decl =
+let getMethodInClass (id:string) (Class(_, _, _, methlis)) : method_decl =
   let rec aux methlis = 
     match methlis with
       | [] -> raise (TypeError ("No such method: "^id))
@@ -58,15 +58,15 @@ let rec replace_nth i x lis =
 let asgn_sto (sto:store) (loc:int) (obj:heapvalue) =
   replace_nth loc obj sto;;
 
-let getClass (c:id) (Program classlis) : class_decl =
+let getClass (c:string) (Program classlis) : class_decl =
   let rec aux classlis = 
     match classlis with
       | [] -> raise (TypeError ("No such class: "^c))
       | (Class(c1, _, _, _) as theclass) :: t -> if c=c1 then theclass else aux t
     in aux classlis
 
-let rec getMethod (id:id) (c:id) (prog:program) : method_decl =
-  let rec hasMethod (id:id) (methlis: method_decl list) : bool =
+let rec getMethod (id:string) (c:string) (prog:program) : method_decl =
+  let rec hasMethod (id:string) (methlis: method_decl list) : bool =
     match methlis with
       | [] -> false
       | Method(_,m,_,_,_,_)::t -> id=m or hasMethod id t
@@ -75,7 +75,7 @@ let rec getMethod (id:id) (c:id) (prog:program) : method_decl =
           else if s="" then raise (TypeError ("No such method: "^id))
             else getMethod id s prog
 
-let fields (cls:id) (prog:program) : string list =
+let fields (cls:string) (prog:program) : string list =
   let rec aux1 flds = 
     match flds with
       | [] -> []
