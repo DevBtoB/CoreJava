@@ -29,6 +29,7 @@ and exp = Operation of exp * binary_operation * exp
     | Not of exp
     | Null
     | Float of float
+    | String of string
 
 and binary_operation = And
     | Or
@@ -47,6 +48,7 @@ and exp_type =
     | IntType
     | ObjectType of string
     | FloatType
+    | StringType
 
 and variable =
     | Field of class_name

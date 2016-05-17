@@ -115,6 +115,7 @@ let applyOp (bop:binary_operation)
 
 let rec eval (e:exp) ((env,sto) as sigma:state) (prog:program) : stackvalue * store =
   match e with
+    | String s -> (StringV s, sto)
     | Integer i -> (IntV i, sto)
     | True -> (BoolV true, sto)
     | False -> (BoolV false, sto)
@@ -272,4 +273,17 @@ let p3 =
     Class("Tree","",[],[Method (IntType, "depth", [], [], [], Integer 3)]);
     Class("Lake","Tree",[],[])];;
 
-print_endline (run_with_args p3 []);;
+(*print_endline (run_with_args p3 []);;*)
+
+let p4 = Program [
+	Class ("Main", "", [],
+		[Method (IntType, "main", [],
+			[Var (StringType, "a"); Var (StringType, "b")],
+			[Assignment ("a", (NewId "Cat")); Assignment ("b", MethodCall(Id "a", "meow", [])); Assignment ("a", (NewId "RubberCat")); Assignment ("b", MethodCall(Id "a", "meow", []))],
+			Id "b");]);
+	Class ("AbstractCat", "", [], [Method (StringType, "meow", [], [], [], String "biip")]);
+	Class ("Cat", "AbstractCat", [], [Method (StringType, "meow", [], [], [], String "meow")]);
+	Class ("RubberCat", "AbstractCat", [], []);	
+];;
+
+print_endline (run_with_args p4 []);;

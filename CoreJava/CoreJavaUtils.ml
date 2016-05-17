@@ -1,7 +1,7 @@
 type varname = string
 type classname = string
 
-type stackvalue = IntV of int | BoolV of bool | NullV | Location of location
+type stackvalue = IntV of int | BoolV of bool | NullV | Location of location | StringV of string
 
 and location = int
 
@@ -22,3 +22,4 @@ let string_of_stackval v =
    		| BoolV b ->  string_of_bool b
    		| NullV -> "null"
    		| Location loc -> string_of_int loc
+		| StringV s -> s
