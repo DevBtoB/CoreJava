@@ -90,6 +90,7 @@ let apply_operation (bop:binary_operation)
   match bop with
     | Plus -> (match (v1, v2) with
         | (IntV i, IntV j) -> IntV (i + j)
+	| (StringV i, StringV j) -> StringV (i ^ j)
         | _ -> raise (TypeError "Plus: Failed to convert arguments"))
     | Minus -> (match (v1, v2) with
         | (IntV i, IntV j) -> IntV (i - j)
@@ -273,14 +274,14 @@ let p3 =
     Class("Tree","",[],[Method (IntType, "depth", [], [], [], Integer 3)]);
     Class("Lake","Tree",[],[])];;
 
-(*print_endline (run_with_args p3 []);;*)
+print_endline (run_with_args p3 []);;
 
 let p4 = Program [
 	Class ("Main", "", [],
 		[Method (IntType, "main", [],
-			[Var (StringType, "a"); Var (StringType, "b")],
-			[Assignment ("a", (NewId "Cat")); Assignment ("b", MethodCall(Id "a", "meow", [])); Assignment ("a", (NewId "RubberCat")); Assignment ("b", MethodCall(Id "a", "meow", []))],
-			Id "b");]);
+			[Var (StringType, "a"); Var (StringType, "b"); Var (StringType, "c"); Var (StringType, "e")],
+			[Assignment ("a", (NewId "Cat")); Assignment ("b", MethodCall(Id "a", "meow", [])); Assignment ("a", (NewId "RubberCat")); Assignment ("c", MethodCall(Id "a", "meow", [])); Assignment ("e", Operation(Id "b", Plus, Operation(String " ", Plus, Id "c")))],
+			Id "e");]);
 	Class ("AbstractCat", "", [], [Method (StringType, "meow", [], [], [], String "biip")]);
 	Class ("Cat", "AbstractCat", [], [Method (StringType, "meow", [], [], [], String "meow")]);
 	Class ("RubberCat", "AbstractCat", [], []);	
