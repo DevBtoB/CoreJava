@@ -5,13 +5,13 @@ type stackvalue = IntV of int | BoolV of bool | NullV | Location of location | S
 
 and location = int
 
-type environment = (varname * stackvalue) list
+type varenv = (varname * stackvalue) list
 
-type heapvalue = Object of classname * environment
+type heapvalue = Object of classname * varenv
 
-type store = heapvalue list
+type heap = heapvalue list
 
-type state = environment * store
+type state = varenv * heap
 
 exception TypeError of string
 exception RuntimeError of string
