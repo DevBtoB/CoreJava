@@ -90,7 +90,7 @@ let apply_operation (bop:binary_operation)
   match bop with
     | Plus -> (match (v1, v2) with
         | (IntV i, IntV j) -> IntV (i + j)
-	| (StringV i, StringV j) -> StringV (i ^ j)
+        | (StringV i, StringV j) -> StringV (i ^ j)
         | _ -> raise (TypeError "Plus: Failed to convert arguments"))
     | Minus -> (match (v1, v2) with
         | (IntV i, IntV j) -> IntV (i - j)
