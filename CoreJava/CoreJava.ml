@@ -127,24 +127,24 @@ let rec eval (e:exp) ((env,heap) as currstate:state) (prog:program) : stackvalue
                else (match get_value "this" env with
                       | Location loc -> let Object(_,flds) = get_heap_value heap loc
                            in (get_value id flds, heap)
-                      | _ -> raise (TypeError ("Undefined variable: "^id)))
+                      | _ -> raise (TypeError ("undefined variable: "^id)))
     | This -> (get_value "this" env, heap)
     | Not e1 -> let (v,heap1) = eval e1 currstate prog
                 in (match v with
                   | BoolV b -> (BoolV (not b), heap1)
-                  | _ -> raise (TypeError "Not applied to non-bool"))
+                  | _ -> raise (TypeError "non-bool"))
     | Operation(e1, And, e2) ->
           let (v,heap1) = eval e1 currstate prog
           in (match v with
             | BoolV true -> eval e2 (env,heap1) prog
             | BoolV false -> (BoolV false, heap1)
-            | _ -> raise (TypeError "And applied to non-boolean"))
+            | _ -> raise (TypeError "non-boolean"))
     | Operation(e1, Or, e2) ->
           let (v,heap1) = eval e1 currstate prog
           in (match v with
             | BoolV true -> (BoolV true, heap1)
             | BoolV false -> eval e2 (env,heap1) prog
-            | _ -> raise (TypeError "And applied to non-boolean"))
+            | _ -> raise (TypeError "non-boolean"))
     | Operation(e1, bop, e2) ->
           let (vl,heap1) = eval_list [e1; e2] currstate prog
           in (apply_operation bop (hd vl) (hd (tl vl)), heap1)
@@ -187,14 +187,14 @@ and exec_statement (s:statement) ((env,heap) as currstate:state) (prog:program) 
                     | Location loc ->
                        let obj = get_heap_value heap1 loc
                        in (env, assign_object heap1 loc (assign_field obj id sv))
-                    | _ -> raise (TypeError("Assignment to ndefined variable: "^id)))
+                    | _ -> raise (TypeError("undefined variable: "^id)))
       | If(e,s1,s2) -> let (sv,heap1) = eval e (env,heap) prog
                      in (match sv with
                         | BoolV true -> exec_statement s1 (env,heap1) prog
                         | BoolV false -> exec_statement s2 (env,heap1) prog
-                        | _ -> raise (TypeError "Non-bool in if stmt"))
+                        | _ -> raise (TypeError "non-bool"))
       | Block sl -> exec_statement_list sl currstate prog
-      | _ -> raise (RuntimeError "exec_statement: Statement not supported")
+      | _ -> raise (RuntimeError "statement not supported")
 
 and exec_statement_list (sl:statement list) (currstate:state) (prog:program) : state =
     match sl with
