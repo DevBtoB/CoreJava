@@ -264,6 +264,8 @@ let p2 = Program
    [Class ("Main", "", [],
      [Method (IntType, "main", [], [Var (IntType, "r")], [Assignment ("r", Integer 1)], Id "r")])];;
 
+print_endline (run_with_args p2 []);;
+
 let p3 = 
   Program [
     Class("Main","", [], 
@@ -280,16 +282,41 @@ print_endline (run_with_args p3 []);;
 let p4 = Program [
 	Class ("Main", "", [],
 		[Method (IntType, "main", [],
-			[Var (StringType, "a"); Var (StringType, "b"); Var (StringType, "c"); Var (StringType, "e")],
+			[Var (StringType, "a"); Var (StringType, "b"); Var (StringType, "c"); Var (StringType, "e"); Var (StringType, "d")],
 			[Assignment ("a", (NewId "Cat")); 
         Assignment ("b", MethodCall(Id "a", "meow", [])); 
         Assignment ("a", (NewId "RubberCat")); 
         Assignment ("c", MethodCall(Id "a", "meow", [])); 
-        Assignment ("e", Operation(Id "b", Plus, Operation(String " ", Plus, Id "c")))],
-			Id "e");]);
+        Assignment ("e", Operation(Id "b", Plus, Operation(String " ", Plus, Id "c")));
+	Assignment ("d", Operation(Id "e", Plus, MethodCall(Id "this", "callPiu", [])))],
+			Id "d");
+		 Method (IntType, "callPiu", [], [Var (StringType, "rCat"); Var (StringType, "what")],
+			[Assignment ("rCat", (NewId "RubberCat"));
+			Assignment ("what", MethodCall(Id "rCat", "rub", []))], Id "what")]);
 	Class ("AbstractCat", "", [], [Method (StringType, "meow", [], [], [], String "biip")]);
 	Class ("Cat", "AbstractCat", [], [Method (StringType, "meow", [], [], [], String "meow")]);
-	Class ("RubberCat", "AbstractCat", [], []);	
+	Class ("RubberCat", "AbstractCat", [], [Method (StringType, "rub", [], [], [], String "piuuuuuu")]);	
 ];;
 
 print_endline (run_with_args p4 []);;
+
+(* NULL object *)
+let p5 = Program [
+	Class("Main", "", [], 
+		[
+			Method (IntType, "main", [], 
+				[
+					Var (StringType, "car");
+					Var (StringType, "sound");
+				],
+				[
+					Assignment ("sound", MethodCall(Id "car", "start", []))
+				], Id "sound")
+		]);
+	Class("Car", "", [], [
+		Method (StringType, "start", [], [], [], String "vruuuum!!")	
+	]);
+];;
+
+print_endline (run_with_args p5 []);;
+
